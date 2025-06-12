@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using System.Collections;
+using System.Globalization;
 
 
 namespace ClassDish
@@ -18,7 +20,7 @@ namespace ClassDish
         Среднеазиатская,
         Восточная
     }
-    public class Dish
+    public class Dish 
     {
         public string NameOfDish { get; }
         public KitchenName Kitchen { get; set; }
@@ -27,6 +29,8 @@ namespace ClassDish
         public int Price { get; set; }
         public bool DishExistence { get; }
         public int CookingTime { get; set; }
+
+
 
         public Dish(string name, KitchenName kitchen, string aboutTheDish, int price, bool dishExistence, int cookingtime)
         {
@@ -53,5 +57,71 @@ namespace ClassDish
 
             return info;
         }
+
+        public abstract class Snack : Dish
+        {
+            public bool WhatKindOfSnack { get; set; }
+
+            public Snack(string name, bool whatKindOfSnack, KitchenName kitchen, string aboutTheDish, int price, bool dishExistence, int cookingtime)
+                : base(name, kitchen, aboutTheDish, price, dishExistence, cookingtime)
+            {
+                WhatKindOfSnack = whatKindOfSnack;
+
+            }
+
+            public override string[] GetInfo()
+            {
+                var info = new string[7];
+                var dishInfo = base.GetInfo();
+
+                info[0] = dishInfo[0];
+                info[1] = $"Тип закуски: {(WhatKindOfSnack ? "горячая" : "холодная")}";
+                info[2] = dishInfo[1];
+                info[3] = dishInfo[2];
+                info[4] = dishInfo[3];
+                info[5] = dishInfo[4];
+                info[6] = dishInfo[5];
+
+                return info;
+            }
+        }
+
+        public enum TypeOfBasicFood
+        {
+            Мясо,
+            Рыба,
+            Вегетарианское
+        }
+
+        public abstract class BasicFood : Dish
+        {
+            public TypeOfBasicFood TypeFood { get; set; }
+            public string Garnish { get; set; }
+
+            public BasicFood(string name, TypeOfBasicFood typeFood, string garnish, KitchenName kitchen, string aboutTheDish, int price, bool dishExistence, int cookingtime)
+                : base(name, kitchen, aboutTheDish, price, dishExistence, cookingtime)
+            {
+                TypeFood = typeFood;
+                Garnish = garnish;
+            }
+
+            public override string[] GetInfo()
+            {
+                var info = new string[8];
+                var dishInfo = base.GetInfo();
+
+                info[0] = dishInfo[0];
+                info[1] = $"Тип основного продукта: {TypeFood}";
+                info[2] = $"Гарнир: {Garnish}";
+                info[3] = dishInfo[1];
+                info[4] = dishInfo[2];
+                info[5] = dishInfo[3];
+                info[6] = dishInfo[4];
+                info[7] = dishInfo[5];
+
+                return info;
+            }
+        }
     }
- }
+}
+

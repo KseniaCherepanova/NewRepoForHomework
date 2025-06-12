@@ -1,4 +1,8 @@
+using System.Collections;
 using ClassDish;
+using static ClassDish.Dish;
+
+
 namespace Dishes.UnitTests
 {
     [TestFixture]
@@ -35,7 +39,125 @@ namespace Dishes.UnitTests
 
         private Dish CreateTestDish()
         {
-            return new Dish("Карбонара", KitchenName.Итальянская, "паста с яичным соусом, сыром и беконом.", 40, true, 20);
+            var DishMember = new Dish("Карбонара", KitchenName.Итальянская, "паста с яичным соусом, сыром и беконом.", 40, true, 20);
+            return DishMember;
+        }
+    }
+
+
+    [TestFixture]
+    public class SnackUnitTests
+    {
+        public class TestSnack : Snack
+        {
+            public TestSnack(string name, bool whatKindOfSnack, KitchenName kitchen,
+                             string aboutTheDish, int price, bool dishExistence, int cookingtime)
+                : base(name, whatKindOfSnack, kitchen, aboutTheDish, price, dishExistence, cookingtime)
+            {
+            }
+        }
+
+
+        [Test]
+        public void ConstructorTest_Snack()
+        {
+            var julienne = CreateTestSnack();
+            Assert.That(julienne.WhatKindOfSnack, Is.EqualTo(true));
+        }
+
+
+        [Test]
+        public void GetInfoTest_SnackInfo()
+        {
+            var julienne = CreateTestSnack();
+            var lines = new[]
+            {
+                "Название: Грибной жюльен",
+                "Тип закуски: горячая",
+                "Кухня: Французская",
+                "Описание: запечённые грибы с сыром",
+                "Цена: 5 руб.",
+                "Наличие: в наличии",
+                "Время приготовления: 15 минут"
+            };
+
+            var info = julienne.GetInfo();
+
+            Assert.That(info.Length, Is.EqualTo(7));
+            for (int i = 0; i < info.Length; i++)
+            {
+                Assert.That(info[i], Is.EqualTo(lines[i]));
+            }
+        }
+
+        private Snack CreateTestSnack()
+        {
+            return new TestSnack(
+                name: "Грибной жюльен",
+                whatKindOfSnack: true,
+                kitchen: KitchenName.Французская,
+                aboutTheDish: "запечённые грибы с сыром",
+                price: 5,
+                dishExistence: true,
+                cookingtime: 15
+            );
+        }
+    }
+
+    [TestFixture]
+    public class BasicFoodUnitTests
+    {
+        public class TestBasicFood : BasicFood
+        {
+            public TestBasicFood(string name, TypeOfBasicFood typeFood, string garnish, KitchenName kitchen, string aboutTheDish, int price, bool dishExistence, int cookingtime)
+             : base(name, typeFood, garnish, kitchen, aboutTheDish, price, dishExistence, cookingtime) { }
+        }
+
+        [Test]
+        public void ConstructorTest_BasicFood()
+        {
+            var cutletWithMashedPotatoes = CreateBasicFoodTests();
+            Assert.That(cutletWithMashedPotatoes.TypeFood, Is.EqualTo(TypeOfBasicFood.Мясо));
+            Assert.That(cutletWithMashedPotatoes.Garnish, Is.EqualTo("Пюре"));
+        }
+
+        [Test]
+        public void GetInfoTest_BasicFoodInfo()
+        {
+            var cutletWithMashedPotatoes = CreateBasicFoodTests();
+            var lines = new[]
+            {
+                "Название: Котлеты с пюре",
+                "Тип основного продукта: Мясо",
+                "Гарнир: Пюре",
+                "Кухня: Русская",
+                "Описание: это блюдо, состоящее из жареных мясных котлет и мягкого картофельного пюре",
+                "Цена: 30 руб.",
+                "Наличие: в наличии",
+                "Время приготовления: 30 минут"
+            };
+
+            var info = cutletWithMashedPotatoes.GetInfo();
+
+            Assert.That(info.Length, Is.EqualTo(8));
+            for (int i = 0; i < info.Length; i++)
+            {
+                Assert.That(info[i], Is.EqualTo(lines[i]));
+            }
+        }
+
+        private BasicFood CreateBasicFoodTests()
+        {
+            return new TestBasicFood(
+                name: "Котлеты с пюре",
+                typeFood: TypeOfBasicFood.Мясо,
+                garnish: "Пюре",
+                kitchen: KitchenName.Русская,
+                aboutTheDish: "это блюдо, состоящее из жареных мясных котлет и мягкого картофельного пюре",
+                price: 30,
+                dishExistence: true,
+                cookingtime: 30
+            );
         }
     }
 }
