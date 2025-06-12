@@ -20,7 +20,7 @@ namespace ClassDish
         Среднеазиатская,
         Восточная
     }
-    public class Dish 
+    public class Dish : IComparable<Dish>
     {
         public string NameOfDish { get; }
         public KitchenName Kitchen { get; set; }
@@ -58,6 +58,14 @@ namespace ClassDish
             return info;
         }
 
+
+        public int CompareTo(Dish other)
+        {
+            if (Kitchen != other.Kitchen)
+                return Kitchen.CompareTo(other.Kitchen);
+            return NameOfDish.CompareTo(other.NameOfDish);
+        }
+
         public abstract class Snack : Dish
         {
             public bool WhatKindOfSnack { get; set; }
@@ -73,6 +81,8 @@ namespace ClassDish
             {
                 var info = new string[7];
                 var dishInfo = base.GetInfo();
+
+
 
                 info[0] = dishInfo[0];
                 info[1] = $"Тип закуски: {(WhatKindOfSnack ? "горячая" : "холодная")}";
@@ -93,10 +103,12 @@ namespace ClassDish
             Вегетарианское
         }
 
+
         public abstract class BasicFood : Dish
         {
             public TypeOfBasicFood TypeFood { get; set; }
             public string Garnish { get; set; }
+
 
             public BasicFood(string name, TypeOfBasicFood typeFood, string garnish, KitchenName kitchen, string aboutTheDish, int price, bool dishExistence, int cookingtime)
                 : base(name, kitchen, aboutTheDish, price, dishExistence, cookingtime)
@@ -121,7 +133,30 @@ namespace ClassDish
 
                 return info;
             }
+
+        }
+
+        public class Menu : IEnumerable<Dish>
+        {
+            DateTime Date;
+            List<Dish> Dishes;
+
+            public Menu(string dateString, IEnumerable<Dish> dishes)
+            {
+                Date = DateTime.ParseExact(dateString, "28.05.2025", CultureInfo.InvariantCulture);
+                Dishes = new List<Dish>();
+                foreach (var dish in dishes)
+                {
+                    if (!Dishes.Contains(dish))
+                    {
+                        Dishes.Add(dish);
+                    }
+                }
+            }
+            public IEnumerator<Dish> GetEnumerator() => Dishes.GetEnumerator();
+
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
         }
     }
 }
-

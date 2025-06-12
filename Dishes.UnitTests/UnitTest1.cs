@@ -160,4 +160,60 @@ namespace Dishes.UnitTests
             );
         }
     }
+
+
+    [TestFixture]
+    public class DishesTests
+    {
+        [Test]
+        public void CompareToTest()
+        {
+            var lagman = new Dish("Лагман", KitchenName.Среднеазиатская, "лапша с мясом и овощами", 30, true, 30);
+            var plov = new Dish("Плов", KitchenName.Среднеазиатская, "рис с мясом и морковью", 45, true, 20);
+            var borscht = new Dish("Борщ", KitchenName.Восточная, "суп из свеклы и капусты", 60, true, 15);
+            var shashlik = new Dish("Шашлык", KitchenName.Кавказская, "жареное мясо на шампуре", 40, true, 25);
+            var khachapuri = new Dish("Хачапури", KitchenName.Кавказская, "сырный хлеб", 20, true, 10);
+
+            Assert.That(lagman.CompareTo(borscht), Is.LessThan(0)); // Среднеазиатская после Восточной
+            Assert.That(plov.CompareTo(shashlik), Is.GreaterThan(0)); // Среднеазиатская перед Кавказской
+            Assert.That(shashlik.CompareTo(khachapuri), Is.GreaterThan(0)); // обе из Кавказской — сравнение по названию
+        }
+    }
+
+
+
+    [TestFixture]
+    public class MenuTests
+    {
+        Menu menu;
+        Dish[] fewDishes;
+
+        [SetUp]
+        public void SetUp()
+        {
+            var lagman = new Dish("Лагман", KitchenName.Среднеазиатская, "лапша с мясом и овощами", 30, true, 30);
+            var plov = new Dish("Плов", KitchenName.Среднеазиатская, "рис с мясом и морковью", 45, true, 20);
+            var borscht = new Dish("Борщ", KitchenName.Восточная, "суп из свеклы и капусты", 60, true, 15);
+            var shashlik = new Dish("Шашлык", KitchenName.Кавказская, "жареное мясо на шампуре", 40, true, 25);
+            var khachapuri = new Dish("Хачапури", KitchenName.Кавказская, "сырный хлеб", 20, true, 10);
+
+            fewDishes = new Dish[] { lagman, plov, borscht, shashlik, khachapuri };
+            menu = new Menu("28.05.2025", fewDishes);
+
+        }
+
+        [Test]
+        public void IEnumerableTest()
+        {
+            int i = 0;
+
+            foreach (var dish1 in menu)
+                Assert.That(dish1, Is.SameAs(fewDishes[i++]));
+        }
+
+    }
 }
+
+
+
+
